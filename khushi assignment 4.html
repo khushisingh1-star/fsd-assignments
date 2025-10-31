@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FSD Lab 04 - User Dashboard (Roll No. 61+)</title>
+  <!-- React and Babel CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a0000 0%, #c71d1d 50%, #000 100%);
+      overflow: hidden;
+      position: relative;
+    }
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.25;
+      z-index: 0;
+      filter: blur(1px);
+      animation: floatBubble 14s linear infinite;
+      pointer-events: none;
+    }
+    .bubble1 { width: 140px; height: 140px; left: 3vw; top: 30vh; background: radial-gradient(circle, #ff9999 0%, #c71d1d 80%, #000 100%); animation-duration: 19s;}
+    .bubble2 { width: 90px; height: 90px; left: 70vw; top: 10vh; background: radial-gradient(circle, #ff5353 0%, #800000 100%); animation-duration: 17s;}
+    .bubble3 { width: 120px; height: 120px; left: 60vw; top: 70vh; background: radial-gradient(circle, #f44336 0%, #1a0000 100%); animation-duration: 13s;}
+    .bubble4 { width: 70px; height: 70px; left: 40vw; top: 50vh; background: radial-gradient(circle, #d50000 30%, #111 100%); animation-duration: 22s;}
+    .bubble5 { width: 180px; height: 180px; left: 47vw; top: 8vh; background: radial-gradient(circle, #c71d1d 0%, #222 100%); animation-duration: 25s;}
+    @keyframes floatBubble {
+      0% { transform:translateY(0) scale(1);}
+      50% { transform:translateY(-70px) scale(1.13);}
+      100% { transform:translateY(0) scale(1);}
+    }
+    /* Main container/front content */
+    .container {
+      max-width: 950px;
+      margin: 48px auto;
+      background: rgba(28, 17, 17, 0.77);
+      border-radius: 13px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.21);
+      padding: 32px 22px;
+      position: relative;
+      z-index: 2;
+    }
+    h1 {
+      text-align: center;
+      color: #ffcdd2;
+      text-shadow: 0 1px 5px #000, 0 0 6px #b71c1c;
+    }
+    .nav-bar {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      margin-bottom: 24px;
+    }
+    .nav-link {
+      background: none;
+      border: none;
+      font-size: 1.14em;
+      color: #fff;
+      border-bottom: 2.5px solid transparent;
+      margin: 0 3px;
+      padding: 7px 18px 7px;
+      cursor: pointer;
+      transition: color 0.2s, border 0.2s;
+    }
+    .nav-link.active {
+      color: #f44336;
+      border-bottom: 2.5px solid #f44336;
+      font-weight: bold;
+    }
+    .tab-content {
+      padding: 16px 2px 2px 2px;
+      color: #fff;
+      background: rgba(20,0,0,0.13);
+      border-radius: 6px;
+      min-height: 110px;
+    }
+    ul.user-list {
+      list-style: none;
+      padding: 0;
+    }
+    ul.user-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #582626;
+      color: #ffcdd2;
+    }
+    @media (max-width: 768px) {
+      .nav-bar { flex-direction: column; }
+      .container { padding: 12px 6px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bubble bubble1"></div>
+  <div class="bubble bubble2"></div>
+  <div class="bubble bubble3"></div>
+  <div class="bubble bubble4"></div>
+  <div class="bubble bubble5"></div>
+  <div id="root"></div>
+  <script type="text/babel">
+    // Simple Multipage Navigation (no React Router)
+    function App() {
+      const [page, setPage] = React.useState("dashboard");
+
+      function renderPage() {
+        if (page === "dashboard") return <Dashboard />;
+        if (page === "about") return <About />;
+        if (page === "help") return <Help />;
+        return <Dashboard />;
+      }
+
+      return (
+        <div>
+          <div className="container">
+            <h1>Dynamic User Dashboard</h1>
+            <nav className="nav-bar">
+              <button className={"nav-link" + (page === "dashboard" ? " active" : "")} onClick={() => setPage("dashboard")}>Dashboard</button>
+              <button className={"nav-link" + (page === "about" ? " active" : "")} onClick={() => setPage("about")}>About</button>
+              <button className={"nav-link" + (page === "help" ? " active" : "")} onClick={() => setPage("help")}>Help</button>
+            </nav>
+            {renderPage()}
+          </div>
+        </div>
+      );
+    }
+
+    // Dashboard with Tabs (Profile, etc)
+    function Dashboard() {
+      const [activeTab, setActiveTab] = React.useState("Profile");
+
+      const users = [
+        { id: 1, name: "Rishika", email: "Rishika@example.com" },
+        { id: 2, name: "Megh", email: "Meghshyam@example.com" },
+        { id: 3, name: "Niharika", email: "Niharika@example.com" }
+      ];
+
+      const renderContent = () => {
+        switch (activeTab) {
+          case "Profile":
+            return (<div><h2>User Profile</h2>
+              <p><strong>Name:</strong> Khushi Singh</p>
+              <p><strong>Role:</strong> Student</p>
+              <p><strong>Email:</strong> Khushisingh@example</p>
+            </div>);
+          case "Settings":
+            return (<div><h2>Settings</h2>
+              <p>Manage your preferences and account options here.</p>
+              <ul className="user-list">
+                <li>Change Password</li><li>Update Profile</li><li>Privacy Controls</li>
+              </ul></div>
+            );
+          case "Notifications":
+            return (<div><h2>Notifications</h2>
+              <p>You have {users.length} new updates:</p>
+              <ul className="user-list">
+                {users.map(user =>
+                  <li key={user.id}>📩 New message from {user.name} ({user.email})</li>
+                )}
+              </ul></div>
+            );
+          case "Reports":
+            return (<div>
+              <h2>Reports</h2>
+              <p>View your recent activity and statistics.</p>
+              <ul className="user-list">
+                <li>Last login: Oct 31, 2025</li>
+                <li>Projects completed: 5</li>
+                <li>Pending tasks: 2</li>
+              </ul>
+            </div>
+            );
+          default: return <p>Select a tab to view content.</p>;
+        }
+      };
+
+      return (
+        <div>
+          <ul className="nav-bar" style={{margin: '0 0 15px 0', padding:'0', borderBottom:'1.7px solid #d32', background:'none'}}>
+            {["Profile", "Settings", "Notifications", "Reports"].map(tab =>
+              <button key={tab}
+                className={"nav-link" + (activeTab === tab ? " active" : "")}
+                onClick={() => setActiveTab(tab)}>{tab}</button>
+            )}
+          </ul>
+          <div className="tab-content">{renderContent()}</div>
+        </div>
+      );
+    }
+
+    function About() {
+      return (
+        <div className="tab-content">
+          <h2>About Us</h2>
+          <p>this is a simplke student dashboard..</p>
+          <p>Created with React and beautiful animated design. </p>
+        </div>
+      );
+    }
+
+    function Help() {
+      return (
+        <div className="tab-content">
+          <h2>Help & Support</h2>
+          <p>For any queries, contact your Faculty or post in the student discussion group.</p>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
